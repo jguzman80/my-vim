@@ -1,0 +1,213 @@
+" Leader setting
+let mapleader = " "
+
+" Set compatibility to Vim only.
+set nocompatible
+
+" Helps force plug-ins to load correctly when it is turned back on below.
+filetype off
+
+" Turn on syntax highlighting.
+syntax on
+
+" For plug-ins to load correctly.
+filetype plugin indent on
+
+" Turn off modelines
+set modelines=0
+
+" Automatically wrap text that extends beyond the screen length.
+set wrap
+
+" Vim's auto indentation feature does not work properly with text copied from outside of Vim. Press the <F2> key to toggle paste mode on/off.
+nnoremap <F2> :set invpaste paste?<CR>
+imap <F2> <C-O>:set invpaste paste?<CR>
+set pastetoggle=<F2>
+
+" Line indentation characters to make each line unique
+let g:indentLine_char_list = ['|', '¦', '┆', '┊']
+
+" FZF key bindings
+" This line helps find hidden files and search works okay, but comment this
+" out if anything breaks below
+"let $FZF_DEFAULT_COMMAND='rg --files --follow --no-ignore --hidden --glob "!{.git*,node_modules,vendor*}/*" 2> /dev/null'
+let $FZF_DEFAULT_COMMAND='rg --files --follow --no-ignore --hidden --glob "!{node_modules,vendor*}/*" 2> /dev/null'
+" this part above
+
+nnoremap <C-f> :FZF<CR>
+ let g:fzf_action = {
+   \ 'ctrl-t': 'tab split',
+     \ 'ctrl-i': 'split',
+       \ 'ctrl-v': 'vsplit' }
+
+" PLUGIN: FZF
+" This is the VIM files in the buffer
+nnoremap <silent> <Leader>b :Buffers<CR>
+" This is search for file names within directories
+nnoremap <silent> <C-f> :Files<CR>
+" This is searching for text within files in a directory
+nnoremap <silent> <Leader>f :Rg<CR>
+" This is the search of words and what line numbers where they can be found
+nnoremap <silent> <Leader>/ :BLines<CR>
+" Honestly not really sure about this one, looks like you can search for marks
+" from text edited (Still need to look more into this one)
+nnoremap <silent> <Leader>' :Marks<CR>
+" This is the git commits for the open file (This is cool!!)
+nnoremap <silent> <Leader>g :Commits<CR>
+" This is helptags (Not too sure about this)
+nnoremap <silent> <Leader>H :Helptags<CR>
+" This is the history of files opened
+nnoremap <silent> <Leader>hh :History<CR>
+" This is the history of vim commands run like :G pull
+nnoremap <silent> <Leader>h: :History:<CR>
+" This is the history of vim search terms using ? or /
+nnoremap <silent> <Leader>h/ :History/<CR>
+
+" Netrw binds
+nnoremap <leader>dd :Lexplore %:p:h<CR>
+nnoremap <Leader>da :Lexplore<CR>
+
+" Netrw function for keymapping inside of Netrw
+function! NetrwMapping()
+  nmap <buffer> H u
+  nmap <buffer> h -^
+  nmap <buffer> l <CR>
+
+  nmap <buffer> . gh
+  nmap <buffer> P <C-w>z
+
+  nmap <buffer> L <CR>:Lexplore<CR>
+  nmap <buffer> <Leader>dd :Lexplore<CR>
+endfunction
+
+augroup netrw_mapping
+  autocmd!
+  autocmd filetype netrw call NetrwMapping()
+augroup END
+
+" split screen in vim commands
+nnoremap <C-t> :tab split<CR>
+nnoremap <C-i> :split<CR>
+nnoremap <C-v> :vsplit<CR>
+
+" Uncomment below to set the max textwidth. Use a value corresponding to the width of your screen.
+" set textwidth=79
+set formatoptions=tcqrn1
+set tabstop=2
+set shiftwidth=2
+set softtabstop=2
+set expandtab
+set noshiftround
+
+" Display 5 lines above/below the cursor when scrolling with a mouse.
+set scrolloff=5
+
+" Fixes common backspace problems
+set backspace=indent,eol,start
+
+" Speed up scrolling in Vim
+set ttyfast
+
+" Getting mouse drag to work in tmux
+" set ttymouse=xterm2
+set ttymouse=sgr
+" This setting breaks VIM Mouse interactions outside of tmux, disabled for
+" now.
+
+" Status bar
+let gitBranch=system("git rev-parse --abbrev-ref HEAD")
+set laststatus=2
+
+" Display options
+set showmode
+set showcmd
+
+" Highlight matching pairs of brackets. Use the '%' character to jump between them.
+set matchpairs+=<:>
+
+" Display different types of white spaces.
+set list
+set listchars=tab:›\ ,trail:•,extends:#,nbsp:.
+
+" Show line numbers
+set number
+
+" Set status line display including git branch customization
+function! FugitiveHead()
+  if exists("*fugitive#buffer_head")
+    return fugitive#buffer_head()
+  else
+    return ''
+  endif
+endfunction
+
+" set statusline=%F%m%r%h%w\ [FORMAT=%{&ff}]\ [TYPE=%Y]\ [POS=%l,%v][%p%%]\ [BUFFER=%n]\ %{strftime('%c')}
+set statusline=%F%m%r%h%w\ [POS=%l,%v][%p%%]\ [BUFFER=%n]\ [Branch:%{FugitiveHead()}]
+" let &statusline .= ' ' . gitBranch
+" set statusline+=%{FugitiveHead()}
+
+" Encoding
+set encoding=utf-8
+
+" Highlight matching search patterns
+set hlsearch
+
+" Enable incremental search
+set incsearch
+
+" Include matching uppercase words with lowercase search term
+set ignorecase
+
+" Include only uppercase words with uppercase search term
+set smartcase
+
+" Here I am setting the location of vim setting files
+set backupdir=~/.vim/backup//
+set directory=~/.vim/swp//
+set undodir=~/.vim/undo//
+
+" Store info from no more than 100 files at a time, 9999 lines of text, 100kb of data. Useful for copying large amounts of data between files.
+set viminfo='100,<9999,s100
+
+" Map the <Space> key to toggle a selected fold opened/closed.
+nnoremap <silent> <Space> @=(foldlevel('.')?'za':"\<Space>")<CR>
+vnoremap <Space> zf
+
+" Close NerdTree if F6
+nmap <F6> :NERDTreeToggle<CR>
+
+" Opens the terminal at the bottom of the screen (VIM term not tmux term)
+nmap <silent> <leader>bt :bo term<CR>
+
+" Automatically save and load folds
+autocmd BufWinLeave *.* mkview
+autocmd BufWinEnter *.* silent loadview"
+
+" Close the tab if NERDTree is the only window remaining in it.
+autocmd BufEnter * if winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
+
+" If another buffer tries to replace NERDTree, put it in the other window, and
+" bring back NERDTree.
+autocmd BufEnter * if bufname('#') =~ 'NERD_tree_\d\+' && bufname('%') !~ 'NERD_tree_\d\+' && winnr('$') > 1 |
+     \ let buf=bufnr() | buffer# | execute "normal! \<C-W>w" | execute 'buffer'.buf | endif
+
+" NerdTree Plugin setting
+let g:rainbow_active = 1
+let NERDTreeShowHidden=1
+let NERDTreeMouseMode=2
+let NERDTreeMapOpenInTab='<ENTER>'
+
+" Python syntax highlighting
+let g:python_highlight_all = 1
+
+augroup MouseInNERDTreeOnly
+      autocmd!
+          autocmd BufEnter NERD_tree_* set mouse=a
+              autocmd BufLeave NERD_tree_* set mouse=a
+            augroup END
+            set mouse=a
+
+" Call the .vimrc.plug file
+ if filereadable(expand("~/.vimrc.plug"))
+     source ~/.vimrc.plug
+ endif

@@ -1,0 +1,46 @@
+call plug#begin('~/.vim/plugged')
+
+" Fugitive Vim Github Wrapper
+ Plug 'tpope/vim-fugitive'
+
+" Rainbow Parentheses
+Plug 'frazrepo/vim-rainbow'
+
+" Relative Numbers plugin
+Plug 'jeffkreeftmeijer/vim-numbertoggle'
+
+" Higlighting for the Terraform HCL
+Plug 'hashivim/vim-terraform'
+
+" On-demand loading
+Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
+
+" Puppet Syntax
+Plug 'rodjek/vim-puppet'
+
+" Jenkinsfile syntax highlighting (include pre-reqs)
+Plug 'tpope/vim-pathogen'
+Plug 'martinda/Jenkinsfile-vim-syntax'
+
+" Python syntax highlighting
+Plug 'vim-python/python-syntax'
+
+" GoLang syntax highlighting
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+
+" FZF Fuzzy finder search for VIM
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
+
+" Line indenting plugin
+Plug 'Yggdroot/indentLine'
+
+" Typescript Syntax highlighting
+Plug 'leafgarland/typescript-vim'
+
+" Dockerfile syntax highlighting
+Plug 'ekalinin/Dockerfile.vim'
+
+" Initialize plugin system
+" - Automatically executes `filetype plugin indent on` and `syntax enable`.
+call plug#end()
